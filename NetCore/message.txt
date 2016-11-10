@@ -1,0 +1,73 @@
+ 【在Windows系统搭建.NET Core环境并创建运行ASP.NET网站】
+
+1.下载所需要的文件
+ 
+官方有两种选择方式一种是安装 Visual Studio 2015 Update 3和NET Core 1.0 for Visual Studio，另一种是使用微软自己的编辑器 Visual Studio Code和安装.NET Core SDK for Windows。
+本次选择第二种方式，顺便使用下Visual Studio Code。下载下面两个文件。（今天选择第二种）
+
+2.安装sdk
+
+3.先创建一个文件夹mkdir hwapp，然后cd hwapp进入改目录
+  执行执行dotnet new 命令创建示例程序  第一次运行 dotnet new会出现如下所示，等待100%完成即可。
+  其实就是在新创建的hwapp文件夹下创建了两个文件 【Program.cs :c#控制台程序】【project.json:配置文件】
+
+4.运行程序 命令dotnet restore用于修复在project.json中特定的包，会在hwapp文件下产生一个名为project.lock.json的文件
+  
+5.执行命令dotnet run，成功打出Hello World!
+
+在windows上创建一个asp.net网站
+
+1. 更改 project.json 文件
+      添加"Microsoft.AspNetCore.Server.Kestrel": "1.0.0" 到  dependencies 里面
+
+2.dotnet restore
+
+3.在hwapp文件夹里面创建 Startup.cs 类，然后编辑（备注：修改命名空间）【Add a Startup.cs file that defines the request handling logic】
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
+namespace aspnetcoreapp
+{
+    public class Startup
+    {
+        public void Configure(IApplicationBuilder app)
+        {
+            app.Run(context =>
+            {
+                return context.Response.WriteAsync("Hello from ASP.NET Core!");
+            });
+        }
+    }
+}
+4.修改Program.cs ，设置webHost
+
+
+using System;
+using Microsoft.AspNetCore.Hosting;//加
+
+namespace aspnetcoreapp
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()  //加
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
+    }
+}
+
+5.dotnet run
+
+6.http://localhost:5000
+
+                【备注：整个过程都是用命令操作，修改配置都要执行dotnet restore，修改类文件都要执行dotnet run】
+
+  
+
